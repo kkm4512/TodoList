@@ -1,5 +1,4 @@
 <template>
-  <h1>gd</h1>
     <div class="flex justify-end" >
         <template v-if="accessToken">
             <div class="text-lg text-white font-semibold mr-3">
@@ -43,9 +42,12 @@
 
       <div v-if="isModalOpen" class="modal">
       <div class="modal-content">
-        <h3>{{ selectedTodo.title }}</h3>
-        <p>작성자: {{ selectedTodo.author }}</p>
-        <button @click="isModalOpen = false">닫기</button>
+        제목 : <input type="text" class="border-2 border-black ml-5" v-model="modalTitle"><p class="mt-2" ></p>
+        작성자 : <input type="text" class="border-2 border-black ml-1" v-model="modalAuthor">
+        <div class="flex justify-end">
+          <button class="mr-2 mt-3 border-2 *:rounded border-blue-500" @click="patch(modalTitle,modalAuthor)">수정</button>
+          <button @click="isModalOpen = false" class="close">닫기</button>
+        </div>
       </div>
     </div>      
                 
@@ -70,6 +72,9 @@ const todos = ref([]);
 const newTodo = ref('');
 const isModalOpen = ref(false);
 const selectedTodo = ref({});
+const modalTitle = ref('');
+const modalAuthor = ref('');
+const ids = ref('');
 
 
 
@@ -89,10 +94,32 @@ if (accessToken) {
   }
 } 
 
+const patch = async (title,author) => {
+  const response = await $fetch('todolist',{
+    baseURL: "http://localhost:3001",
+    method: "PATCH",
+    body: {
+        id : ids.value,
+        title,
+        author
+      }
+  })
+  if (response.status === 401){
+    alert(response.message)
+  } else {
+    modalTitle.value = response.title;
+    modalAuthor.value = response.author;
+    isModalOpen.value = false
+    fetchTodos()
+  }
+}
 
 const openModal = (todo) => {
     selectedTodo.value = todo;
     isModalOpen.value = true;
+    modalTitle.value = todo.title;
+    modalAuthor.value = todo.author
+    ids.value = todo.id
   };
 
 

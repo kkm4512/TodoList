@@ -16,8 +16,11 @@
     padding: 20px; /* 내부 여백 */
     border-radius: 10px; /* 모서리 둥글게 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    width: 500px; /* 모달의 너비 */
+    width: 300px; /* 모달의 너비 */
+    height: 140px;
     max-width: 80%; /* 모달의 최대 너비 */
+    border-color: black;
+    border:solid
   }
 
   .todo-item {
@@ -32,3 +35,13 @@
   .red-text {
     color: red;
   }  
+
+  .close {
+    margin-top: 10px;
+    border-radius: 5px;
+    border: solid 1px;
+    border-color: red;
+    cursor: pointer;
+    justify-content: flex-end;
+    
+  }
