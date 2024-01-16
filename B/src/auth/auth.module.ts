@@ -15,6 +15,7 @@ import { jwtConstants } from 'src/sequrity/secret';
       signOptions: { expiresIn: '60s' },
     }),    
   ],
+  exports: [TypeOrmModule.forFeature([auth_table])],
   controllers: [AuthController],
   providers: [AuthService],
 })

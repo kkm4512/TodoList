@@ -13,4 +13,5 @@ export class auth_table {
 
     @Column()
     nickname: string;
+
 }
