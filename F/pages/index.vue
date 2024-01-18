@@ -27,23 +27,37 @@
             추가
             </button>
       </div>
+
+      <div class="mt-2">
+        <span class="sorted mr-1" @onclick="sortByLatest">최신순</span>
+        /
+        <span class="sorted ml-1"  @onclick="sortByOldest">오래된순</span>
+      </div>
       
       <ul class="mt-3 flex flex-col">
         <li v-for="todo in todos" :key="todo.id" class="flex justify-between items-center mt-1" >
           <input type="checkbox" class="mr-2 mt-4" v-model="todo.checked">
           <span :class="{ 'red-text': todo.checked }" class="border-2 border-black rounded p-2 flex-grow mr-2 todo-item" @click="openModal(todo)">{{ todo.title }}</span>
-        <!-- 작은 네모 상자 추가 -->
+        
         <div class="mt-4 p-2 w-30 h-10 border-2 border-red-500 rounded mr-2">{{ todo.author }}</div>
         </li>
+
         <div class="flex justify-end">
           <button class="mt-2 mr-2 h-10 w-12 border-2 border-black bg-red-500 text-white" @click="deleteList" v-if="accessToken"> 삭제 </button>
-        </div>
+        </div>        
+        
+        <!-- 페이지네이션 css -->
+
+        <div class="flex justify-center items-center mt-10">
+          <div v-for="page in Math.ceil(newPagetotal/5)" :key="page" class="mr-2">
+            <div class="flex justify-center items-center border-2 border-l-sky-400 w-6 h-6 rounded-lg text-xs cursor-pointer" @click="sendPage(page)">
+              {{ page }}
+            </div>
+          </div>
+      </div>
       </ul>
       
-        <div class="flex flex-row justify-center" v-for="todo in todos" :key="todo.id">
-          <input type="text" class="border-2 border-black w-7" >
-        </div>      
-      
+  
 
       <div v-if="isModalOpen" class="modal">
       <div class="modal-content">
@@ -88,7 +102,8 @@ const selectedTodo = ref({});
 const modalTitle = ref('');
 const modalAuthor = ref('');
 const ids = ref('');
-
+const newPagesLists = ref('');
+const newPagetotal = ref('');
 
 
 
@@ -106,6 +121,28 @@ if (accessToken) {
     console.error("JWT 디코드 에러:", error);
   }
 } 
+
+
+// 최신순
+const sortByLatest = () => {
+
+}
+
+
+//오래된순
+const sortByOldest = () => {
+
+}
+
+const sendPage = async (page) => {
+  const response = await $fetch(`todolist/sendPage/${page}`,{
+    baseURL: `http://localhost:3001`,
+    method: "GET",
+  })
+  todos.value = response.data
+  console.log(newPagesLists.value)
+  
+}
 
 const patch = async (title,author) => {
   const response = await $fetch('todolist',{
@@ -161,6 +198,10 @@ const checkUser = () => {
 
 const addTodo = async () => {
   checkUser()
+  if(newTodo.value===''){
+    alert('내용을 입력해주세요.')
+    return
+  }
     const response = await $fetch('todolist',{
         baseURL: "http://localhost:3001",
         method: "POST",
@@ -183,16 +224,20 @@ const addTodo = async () => {
       baseURL: "http://localhost:3001",
       method: "GET"  
     });
-    todos.value = response
-    todos.value = response.map( todo => ({...todo, checked : false}) )
+    todos.value = response.data
+    todos.value = response.data.map( todo => ({...todo, checked : false}) )
+    newPagetotal.value = response.total
+
     
   } else {
     todos.value = '';
   }
 };
 
-  onMounted(()=>{
-    fetchTodos()
+
+
+  onMounted( async ()=>{
+    await fetchTodos()
   })
   
 </script>

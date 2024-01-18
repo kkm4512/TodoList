@@ -22,12 +22,30 @@ export class TodolistService {
         }
 
         async getTodoLists(){
-            const result = await this.todolistRepository.find({
+            const [result,count] = await this.todolistRepository.findAndCount({
+                take: 5,
                 order: {
                     createdate: 'DESC'
                 }
             })
-            return result
+            return {
+                data: result,
+                total: count
+            }
+        }
+
+        async getPagetodoLists([page]){
+            const [pages,count] = await this.todolistRepository.findAndCount({
+                skip: 5 * (page - 1),
+                take : 5,
+                order: {
+                    createdate: 'DESC'
+                }
+            })
+            return {
+                data: pages,
+                total: count
+            }
         }
 
         async removeLists(items:any){

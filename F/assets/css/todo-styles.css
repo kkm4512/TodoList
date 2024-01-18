@@ -43,5 +43,11 @@
     border-color: red;
     cursor: pointer;
     justify-content: flex-end;
+  }
+
+  .sorted{
+    cursor: pointer;
+    border-width: 2px;
+    border-color: aqua;
     
   }
