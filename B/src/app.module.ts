@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { auth_table } from './Entity/auth_table';
 import { TodolistModule } from './todolist/todolist.module';
 import { todolist } from './Entity/todolist';
+import { ConfigModule } from '@nestjs/config';
 
 
 @Module({

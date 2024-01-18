@@ -39,6 +39,11 @@
           <button class="mt-2 mr-2 h-10 w-12 border-2 border-black bg-red-500 text-white" @click="deleteList" v-if="accessToken"> 삭제 </button>
         </div>
       </ul>
+      
+        <div class="flex flex-row justify-center" v-for="todo in todos" :key="todo.id">
+          <input type="text" class="border-2 border-black w-7" >
+        </div>      
+      
 
       <div v-if="isModalOpen" class="modal">
       <div class="modal-content">
@@ -48,11 +53,19 @@
           <button class="mr-2 mt-3 border-2 *:rounded border-blue-500" @click="patch(modalTitle,modalAuthor)">수정</button>
           <button @click="isModalOpen = false" class="close">닫기</button>
         </div>
+
+  
+
       </div>
     </div>      
                 
       </div>
-    </div>    
+
+
+
+    </div>  
+    
+
 
 </template>
 

@@ -33,7 +33,6 @@ export class TodolistController {
     @Body() body:any
   ){
     const result = await this.todolistService.patchedList(body)
-    console.log(result)
     res.send(result)
   }
 
