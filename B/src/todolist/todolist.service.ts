@@ -21,6 +21,12 @@ export class TodolistService {
             return result
         }
 
+
+        //최신순 true
+        //오래된순 false
+
+        //최신순 DESC
+        //오래된순 ASC
         async getTodoLists(){
             const [result,count] = await this.todolistRepository.findAndCount({
                 take: 5,
@@ -34,7 +40,20 @@ export class TodolistService {
             }
         }
 
-        async getPagetodoLists([page]){
+        async getTodoList(){
+            const [result,count] = await this.todolistRepository.findAndCount({
+                take: 5,
+                order: {
+                    createdate: 'ASC'
+                }
+            })
+            return {
+                data: result,
+                total: count
+            }
+        }        
+
+        async getPagetodoLists(page:any){
             const [pages,count] = await this.todolistRepository.findAndCount({
                 skip: 5 * (page - 1),
                 take : 5,
@@ -66,12 +85,35 @@ export class TodolistService {
                 author: body.author
             })
 
-
-            
-            
-
             await this.todolistRepository.save(newList)
             return newList
         }
 
+        //최신순 true
+        //오래된순 false
+
+        //최신순 DESC
+        //오래된순 ASC
+        async sortList(body:any){
+            if (body.boolean === true){
+                const result = await this.todolistRepository.find({
+                    skip:5 * (body.currentPage - 1),
+                    take:5,
+                    order: {
+                        createdate:'DESC'
+                    }
+                }) 
+                return result
+
+            } else {
+                const result = await this.todolistRepository.find({
+                    skip:5 * (body.currentPage - 1),
+                    take:5,                    
+                    order: {
+                        createdate:'ASC'
+                    }
+                })      
+                return result          
+            } 
+        }
 }

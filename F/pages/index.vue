@@ -29,9 +29,9 @@
       </div>
 
       <div class="mt-2">
-        <span class="sorted mr-1" @onclick="sortByLatest">최신순</span>
+        <span class="sorted mr-1 hover:bg-white hover:text-blue-300" @click="sortByLatest">최신순</span>
         /
-        <span class="sorted ml-1"  @onclick="sortByOldest">오래된순</span>
+        <span class="sorted ml-1 hover:bg-white hover:text-blue-300"  @click="sortByOldest">오래된순</span>
       </div>
       
       <ul class="mt-3 flex flex-col">
@@ -104,12 +104,15 @@ const modalAuthor = ref('');
 const ids = ref('');
 const newPagesLists = ref('');
 const newPagetotal = ref('');
+const currentPage = ref('');
+const sotredChcked = ref(true);
+
 
 
 
 import { onMounted } from 'vue';
 
-
+//로그인여부
 if (accessToken) {
   try {
     const decoded = jwtDecode(accessToken)
@@ -123,18 +126,60 @@ if (accessToken) {
 } 
 
 
-// 최신순
-const sortByLatest = () => {
+  //최신순 true
+  //오래된순 false
 
+  //최신순 DESC
+  //오래된순 ASC
+const sortByLatest = async() => {
+  sotredChcked.value = true
+  console.log(sotredChcked.value)
+  if (currentPage.value === '') {
+    currentPage.value = 1
+  }
+  const response = await $fetch(`todolist/sorted`,{
+    baseURL: `http://localhost:3001`,
+    method: "POST",
+    body:{
+      currentPage: currentPage.value,
+      boolean: true
+    }
+  })
+
+
+
+  todos.value = response
+
+  
 }
 
 
-//오래된순
-const sortByOldest = () => {
+  //최신순 true
+  //오래된순 false
+  
+  //최신순 DESC
+  //오래된순 ASC
+const sortByOldest = async() => {
+  sotredChcked.value = false
+  console.log(sotredChcked.value)
+  if (currentPage.value === '') {
+    currentPage.value = 1
+  }
+  const response = await $fetch(`todolist/sorted`,{
+    baseURL: `http://localhost:3001`,
+    method: "POST",
+    body:{
+      currentPage: currentPage.value,
+      boolean: false
+    }
+  })
 
+  todos.value = response
 }
 
+//페이지 보내기
 const sendPage = async (page) => {
+  currentPage.value = page
   const response = await $fetch(`todolist/sendPage/${page}`,{
     baseURL: `http://localhost:3001`,
     method: "GET",
@@ -144,6 +189,7 @@ const sendPage = async (page) => {
   
 }
 
+//수정
 const patch = async (title,author) => {
   const response = await $fetch('todolist',{
     baseURL: "http://localhost:3001",
@@ -164,6 +210,7 @@ const patch = async (title,author) => {
   }
 }
 
+//모달창 띄우고 할일
 const openModal = (todo) => {
     selectedTodo.value = todo;
     isModalOpen.value = true;
@@ -173,6 +220,7 @@ const openModal = (todo) => {
   };
 
 
+  //삭제
 const deleteList = async() => {
   const newTodos = todos.value.filter( todo => todo.checked === true)
   try {
@@ -189,6 +237,8 @@ const deleteList = async() => {
   }
 }
 
+
+//로그인 유저확인
 const checkUser = () => {
   if (!accessToken){
     alert('로그인후에 이용해주세요')
@@ -196,6 +246,7 @@ const checkUser = () => {
   }
 }
 
+//투두 추가
 const addTodo = async () => {
   checkUser()
   if(newTodo.value===''){
@@ -218,8 +269,14 @@ const addTodo = async () => {
   }
 
   //페이지 로드 됐을때 전체 Todo리스트 가져오기
+  
+   //최신순 true
+  //오래된순 false
+  
+  //최신순 DESC
+  //오래된순 ASC
   const fetchTodos = async () => {
-  if(accessToken){
+  if(accessToken && sotredChcked.value === true){
     const response = await $fetch('todolist', {
       baseURL: "http://localhost:3001",
       method: "GET"  
@@ -230,12 +287,21 @@ const addTodo = async () => {
 
     
   } else {
-    todos.value = '';
+    
+    const response = await $fetch('todolist/false', {
+      baseURL: "http://localhost:3001",
+      method: "GET",
+    });
+    todos.value = response.data
+    todos.value = response.data.map( todo => ({...todo, checked : false}) )
+    newPagetotal.value = response.total    
+    
+
   }
 };
 
 
-
+//실행
   onMounted( async ()=>{
     await fetchTodos()
   })

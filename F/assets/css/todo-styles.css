@@ -49,5 +49,9 @@
     cursor: pointer;
     border-width: 2px;
     border-color: aqua;
+    background-color: beige;
+    border-radius: 10px;
+    text-align: center;
+    font-style: initial;
     
   }

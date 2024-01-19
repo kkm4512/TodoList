@@ -23,6 +23,12 @@ export class TodolistController {
     res.send(result)
   }
 
+  @Get('/false')
+  async getTodoList(@Res() res:Response){
+    const result = await this.todolistService.getTodoList()
+    res.send(result)
+  }  
+
   @Delete()
   async deleteList(@Res() res:Response,@Body() body:todolist){
     const result = await this.todolistService.removeLists(body)
@@ -45,6 +51,16 @@ export class TodolistController {
   ){
     const result = await this.todolistService.getPagetodoLists(id)
     res.send(result)
+  }
+
+  @Post('/sorted')
+  async sortedPage(
+    @Res() res:Response,
+    @Body() currentPage:any
+  ){
+    const result = await this.todolistService.sortList(currentPage)
+    res.send(result)
+    
   }
 
   
