@@ -34,6 +34,10 @@
         <span class="sorted ml-1 hover:bg-white hover:text-blue-300"  @click="sortByOldest">오래된순</span>
       </div>
       
+      <div>
+        <input type="checkbox" class="mt-2 w-10 h-10 border-black" v-model="allCheckd" @click="allCheckdCheck">
+      </div>
+
       <ul class="mt-3 flex flex-col">
         <li v-for="todo in todos" :key="todo.id" class="flex justify-between items-center mt-1" >
           <input type="checkbox" class="mr-2 mt-4" v-model="todo.checked">
@@ -102,10 +106,10 @@ const selectedTodo = ref({});
 const modalTitle = ref('');
 const modalAuthor = ref('');
 const ids = ref('');
-const newPagesLists = ref('');
 const newPagetotal = ref('');
 const currentPage = ref('');
 const sotredChcked = ref(true);
+const allCheckd = ref(false);
 
 
 
@@ -126,6 +130,17 @@ if (accessToken) {
 } 
 
 
+
+const allCheckdCheck = async() => {
+  console.log(allCheckd.value)
+  if (allCheckd.value === false){
+    const result = todos.value.filter(todo => todo.checked === false)
+    result.forEach(todo => todo.checked = true)    
+  } else {
+    const result = todos.value.filter(todo => todo.checked === true)
+    result.forEach(todo => todo.checked = false)    
+  }
+}
   //최신순 true
   //오래된순 false
 
@@ -161,7 +176,6 @@ const sortByLatest = async() => {
   //오래된순 ASC
 const sortByOldest = async() => {
   sotredChcked.value = false
-  console.log(sotredChcked.value)
   if (currentPage.value === '') {
     currentPage.value = 1
   }
@@ -182,9 +196,10 @@ const sendPage = async (page) => {
   currentPage.value = page
   const response = await $fetch(`todolist/sendPage/${page}`,{
     baseURL: `http://localhost:3001`,
-    method: "POST",
+    method: "GET",
   })
-  todos.value = response.data
+  allCheckd.value = false
+  todos.value = await response.data
   
 }
 
@@ -230,7 +245,10 @@ const deleteList = async() => {
         newTodos
       }
     })
+
+    allCheckd.value = false
     await fetchTodos()
+    
   } catch (error) {
     
   }
