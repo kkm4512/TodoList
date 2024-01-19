@@ -132,9 +132,9 @@ if (accessToken) {
 
 
 const allCheckdCheck = async() => {
-  console.log(allCheckd.value)
   if (allCheckd.value === false){
     const result = todos.value.filter(todo => todo.checked === false)
+    console.log(result)
     result.forEach(todo => todo.checked = true)    
   } else {
     const result = todos.value.filter(todo => todo.checked === true)
@@ -200,6 +200,8 @@ const sendPage = async (page) => {
   })
   allCheckd.value = false
   todos.value = await response.data
+  todos.value = response.data.map( todo => ({...todo, checked : false}))
+
   
 }
 
@@ -300,6 +302,7 @@ const addTodo = async () => {
     });
     todos.value = response.data
     todos.value = response.data.map( todo => ({...todo, checked : false}) )
+
     newPagetotal.value = response.total
 
     
