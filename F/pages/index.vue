@@ -182,10 +182,9 @@ const sendPage = async (page) => {
   currentPage.value = page
   const response = await $fetch(`todolist/sendPage/${page}`,{
     baseURL: `http://localhost:3001`,
-    method: "GET",
+    method: "POST",
   })
   todos.value = response.data
-  console.log(newPagesLists.value)
   
 }
 

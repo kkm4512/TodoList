@@ -47,8 +47,10 @@ export class TodolistController {
   @Get('/sendPage/:id')
   async getPage(
     @Res() res:Response,
+    @Body() body:any,
     @Param('id') id:any
   ){
+    console.log(body)
     const result = await this.todolistService.getPagetodoLists(id)
     res.send(result)
   }
