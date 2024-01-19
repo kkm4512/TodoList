@@ -17,14 +17,14 @@ export class TodolistController {
   }
 
   @Get()
-  async getTodoLists(@Res() res:Response){
+  async getTodoListsDesc(@Res() res:Response){
     const result = await this.todolistService.getTodoLists()
     console.log(result)
     res.send(result)
   }
 
   @Get('/false')
-  async getTodoList(@Res() res:Response){
+  async getTodoListAsc(@Res() res:Response){
     const result = await this.todolistService.getTodoList()
     res.send(result)
   }  
