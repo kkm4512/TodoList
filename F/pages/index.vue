@@ -32,6 +32,8 @@
         <span class="sorted mr-1 hover:bg-white hover:text-blue-300" @click="sortByLatest">최신순</span>
         /
         <span class="sorted ml-1 hover:bg-white hover:text-blue-300"  @click="sortByOldest">오래된순</span>
+        /
+        <span><input type="date" v-model="selectedDate" @change="changedDateFunction"></span>
       </div>
       
       <div>
@@ -110,6 +112,7 @@ const newPagetotal = ref('');
 const currentPage = ref('');
 const sotredChcked = ref(true);
 const allCheckd = ref(false);
+const selectedDate = ref('');
 
 
 
@@ -130,11 +133,29 @@ if (accessToken) {
 } 
 
 
+/**
+ * 1. 현재 선택한 날짜를 고른다.
+ * 2. 백엔드로 날짜를 보낸다.
+ * 3. db에서 createAt의 날짜와 일치하는 데이터들만 가져와서 보여준다
+ */ 
+
+const changedDateFunction = async() => {
+  try {
+    const response = await $fetch('todolist/date',{
+      baseURL: "http://localhost:3001",
+      method: "GET",
+      query: {
+        selectedDate: selectedDate.value
+      }
+    })
+  } catch (error) {
+    alert(error)
+  }
+}
 
 const allCheckdCheck = async() => {
   if (allCheckd.value === false){
     const result = todos.value.filter(todo => todo.checked === false)
-    console.log(result)
     result.forEach(todo => todo.checked = true)    
   } else {
     const result = todos.value.filter(todo => todo.checked === true)
@@ -148,7 +169,6 @@ const allCheckdCheck = async() => {
   //오래된순 ASC
 const sortByLatest = async() => {
   sotredChcked.value = true
-  console.log(sotredChcked.value)
   if (currentPage.value === '') {
     currentPage.value = 1
   }

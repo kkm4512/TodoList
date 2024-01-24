@@ -1,9 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Res, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Res, UsePipes, ValidationPipe } from '@nestjs/common';
 import { TodolistService } from './todolist.service';
 import { todolistDto } from 'src/DTO/todolist.dto';
 import { Response } from 'express';
 import { todolist } from 'src/Entity/todolist';
-import { brotliDecompressSync } from 'zlib';
 
 @Controller('todolist')
 export class TodolistController {
@@ -63,6 +62,13 @@ export class TodolistController {
     const result = await this.todolistService.sortList(currentPage)
     res.send(result)
     
+  }
+
+  @Get('date')
+  async dateFindTodoList(
+    @Query() query:any
+  ){
+    console.log(query)
   }
 
   
