@@ -5,14 +5,4 @@ export default defineNuxtConfig({
       baseURL: 'http://localhost:3001'
     }
   },
-  css: [
-    '~/assets/css/main.css',
-    '~/assets/css/todo-styles.css',
-  ],
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
-  },
 })
